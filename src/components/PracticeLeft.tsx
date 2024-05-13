@@ -1,8 +1,12 @@
 export const PracticeLeft = () => {
   const clickHandle = (event: any) => {
     if (event.button === 0) {
-      console.log(event);
+      console.log(event.target);
     }
   };
-  return <section className="section section-left" onClick={(event) => clickHandle(event)}></section>;
+  return (
+    <section className="section section-left" onClick={(event) => clickHandle(event)}>
+      <div className="mainScreen"></div>
+    </section>
+  );
 };

@@ -28,10 +28,48 @@
 .section-left{
   width: 80%;
   height: calc(100vh - 80px);
+  display: flex;
+  align-items: center;
 }
 
 .section-right{
   width: 20%;
   height: calc(100vh - 80px);
   
+}
+
+.mainScreen{
+  border: 2px solid red;
+  width: 600px;
+  max-width: 600px;
+  height: 600px;
+  max-height: 600px;
+  margin: auto;
+}
+
+#addButton{
+  margin: 5px;
+  width:100px;
+}
+
+#addDiv{
+  margin: 5px;
+  width:100px;
+}
+
+#roundButton {
+  color: red; 
+  border: 1px solid black; 
+  border-radius: 50%; 
+  text-align: center; 
+  height: 60px; 
+  width: 60px;
+  margin: 10px;
+}
+
+.clase{
+  color:yellow;
+  background-color: grey;
+  border: 2px solid red;
+  width: 200px;
 }
