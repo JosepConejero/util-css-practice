@@ -1,7 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 import { GlobalVariables } from "../globalVariables/globalVariables";
 import { GlobalPropertiesContext } from "../context/GlobalPropertiesContext";
-import { isValidElement, mainScreen } from "../handlers/handlers";
 import { handleClickOnElement } from "../handlers/handleClickOnElement";
 
 export const PracticeRight = () => {
