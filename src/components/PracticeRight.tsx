@@ -1,54 +1,120 @@
+import { useContext, useEffect, useState } from "react";
+import { GlobalVariables } from "../globalVariables/globalVariables";
+import { GlobalPropertiesContext } from "../context/GlobalPropertiesContext";
+import { isValidElement, mainScreen } from "../handlers/handlers";
+import { handleClickOnElement } from "../handlers/handleClickOnElement";
+
 export const PracticeRight = () => {
-  const { log } = console;
-  let pointer = null;
+  //const [activated, setActivated] = useState(GlobalVariables.moveToActivated);
 
-  //const nodos = document.querySelectorAll(".clase");
-  //const addNode2 = ()=>{  console.log("he pulsado div")};
-  const addNode = () => {
-    const mainScreen = document.querySelector(".mainScreen");
-    if (!mainScreen) {
-      pointer = mainScreen;
-    }
+  const { moveToActivated, setMoveToActivated, elementSelected, setElementSelected }: any = useContext(GlobalPropertiesContext);
 
+  const addPNode = () => {
+    console.log(elementSelected);
+    console.log(GlobalVariables.pointer);
     const otroP = document.createElement("p");
-    otroP.textContent = "textoprueba";
+    otroP.textContent = "texto";
     otroP.className = "clase";
-    otroP.addEventListener("click", addNode);
-    mainScreen?.append(otroP);
-    console.log("entra");
-    ///
+    otroP.style.width = "100%";
+    otroP.addEventListener("click", handleClickOnElement);
+    GlobalVariables.pointer?.append(otroP);
   };
 
   const addNodeDiv = () => {
-    const mainScreen = document.querySelector(".mainScreen");
     const otroDiv = document.createElement("div");
-    //otroDiv.textContent = "mierda";
-    //otroDiv.setAttribute("style", "color:red;");
-    otroDiv.style.height = "200px";
-    otroDiv.style.width = "200px";
-    otroDiv.style.border = "2px solid black";
-    otroDiv.style.backgroundColor = "green";
-    //console.log(otroDiv.hasAttributes());
-    //log(typeof otroDiv);
-    //console.log(JSON.stringify(otroDiv.attributes));
-    ///
-    //otroP.addEventListener("click", addNode);
-    mainScreen?.append(otroDiv) || log("mierda");
+    otroDiv.className = "clase";
+    otroDiv.style.height = "100px";
+    otroDiv.style.width = "100px";
+    otroDiv.addEventListener("click", handleClickOnElement);
+    GlobalVariables.pointer?.append(otroDiv);
   };
-  //document.querySelector("#addButton")?.addEventListener("click", addNode);
-  //document.querySelector("#addDiv")?.addEventListener("click", addNodeDiv);
-  //
+
+  const increase = () => {
+    let tempW = +(GlobalVariables.pointer as HTMLElement).offsetWidth + 1;
+    let tempH = +(GlobalVariables.pointer as HTMLElement).offsetHeight + 1;
+    (GlobalVariables.pointer as HTMLElement).style.maxWidth = `${tempW}px`;
+    (GlobalVariables.pointer as HTMLElement).style.width = `${tempW}px`;
+    (GlobalVariables.pointer as HTMLElement).style.maxHeight = `${tempH}px`;
+    (GlobalVariables.pointer as HTMLElement).style.height = `${tempH}px`;
+  };
+
+  const decrease = () => {
+    let tempW = +(GlobalVariables.pointer as HTMLElement).offsetWidth - 1;
+    let tempH = +(GlobalVariables.pointer as HTMLElement).offsetHeight - 1;
+    (GlobalVariables.pointer as HTMLElement).style.maxWidth = `${tempW}px`;
+    (GlobalVariables.pointer as HTMLElement).style.width = `${tempW}px`;
+    (GlobalVariables.pointer as HTMLElement).style.maxHeight = `${tempH}px`;
+    (GlobalVariables.pointer as HTMLElement).style.height = `${tempH}px`;
+  };
+
+  const remove = () => {
+    if ((GlobalVariables.pointer as HTMLElement) !== GlobalVariables.mainScreenPointer()) {
+      (GlobalVariables.pointer as HTMLElement).remove();
+    }
+    GlobalVariables.pointer = GlobalVariables.mainScreenPointer() as HTMLElement;
+  };
+
+  const parent = () => {
+    if ((GlobalVariables.pointer as HTMLElement) !== GlobalVariables.mainScreenPointer()) {
+      GlobalVariables.pointer = (GlobalVariables.pointer as HTMLElement).parentElement;
+    }
+  };
+
+  const moveToParent = () => {
+    if (GlobalVariables.pointer !== GlobalVariables.mainScreenPointer() && (GlobalVariables.pointer as HTMLElement).parentElement !== GlobalVariables.mainScreenPointer()) {
+      let tempPointer = (GlobalVariables.pointer as HTMLElement).cloneNode(true); //puede que falle por el ID
+      let parent = (GlobalVariables.pointer as HTMLElement).parentElement?.parentElement;
+      (GlobalVariables.pointer as HTMLElement).remove();
+      if (parent) GlobalVariables.pointer = parent;
+      (GlobalVariables.pointer as HTMLElement).append(tempPointer);
+    } else {
+      console.log("don't move to parent");
+    }
+  };
+
+  const moveTo = (event: any) => {
+    //event.stopPropagation();
+    /*  if (isValidElement(GlobalVariables.pointer as HTMLElement)) {
+      GlobalVariables.moveToActivated = !GlobalVariables.moveToActivated;
+      //setMoveToActivated(GlobalVariables.moveToActivated);
+      if (!GlobalVariables.moveToActivated) {
+        GlobalVariables.pointer = mainScreen();
+      }
+    }
+    console.log("moveToActivated: ", GlobalVariables.moveToActivated); */
+    GlobalVariables.setMode = "moving";
+    setMoveToActivated(GlobalVariables.moveToActivated);
+  };
+
+  const refresh = () => {
+    window.location.reload();
+  };
+
+  useEffect(() => {
+    document.querySelector(".addPNode")!.addEventListener("click", addPNode);
+    document.querySelector(".addDivNode")!.addEventListener("click", addNodeDiv);
+    document.querySelector(".refreshButton")!.addEventListener("click", refresh);
+    document.querySelector(".roundButtonMinus")!.addEventListener("click", decrease);
+    document.querySelector(".roundButtonPlus")!.addEventListener("click", increase);
+    document.querySelector(".removeButton")!.addEventListener("click", remove);
+    document.querySelector(".parentButton")!.addEventListener("click", parent);
+    document.querySelector(".moveToParentButton")!.addEventListener("click", moveToParent);
+    document.querySelector(".moveToButton")!.addEventListener("click", (event) => moveTo(event));
+  }, []);
+
   return (
     <section className="section section-right">
-      <button id="addButton" onClick={addNode}>
-        add
-      </button>
-      <button id="addDiv" onClick={addNodeDiv}>
-        add Div
-      </button>
-      <div id="roundButton" onClick={() => log("nada")}>
-        botón redondo
+      <button className="addButton addPNode">add p</button>
+      <button className="addButton addDivNode">add div</button>
+      <button className="addButton refreshButton">refresh</button>
+      <div className="buttons">
+        <div className="roundButtonMinus">-</div>
+        <div className="roundButtonPlus">+</div>
       </div>
+      <button className="addButton removeButton">remove</button>
+      <button className="addButton parentButton">parent</button>
+      <button className="moveToParentButton">move to parent</button>
+      <button className={moveToActivated ? "moveToButton moveToButtonActivated" : "moveToButton moveToButtonIdle"}>move to</button>
     </section>
   );
 };
