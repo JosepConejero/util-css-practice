@@ -2,6 +2,9 @@ import { useContext, useEffect, useState } from "react";
 import { GlobalVariables } from "../globalVariables/globalVariables";
 import { GlobalPropertiesContext } from "../context/GlobalPropertiesContext";
 import { handleClickOnElement } from "../handlers/handleClickOnElement";
+import { handleOnFocus } from "../handlers/handleFocusOnElement";
+import { handleOnBlur } from "../handlers/handleBlurOnElement";
+import { DisplayProperty } from "../properties/DisplayProperty";
 
 export const PracticeRight = () => {
   //const [activated, setActivated] = useState(GlobalVariables.moveToActivated);
@@ -9,28 +12,36 @@ export const PracticeRight = () => {
   const { moveToActivated, setMoveToActivated, elementSelected, setElementSelected }: any = useContext(GlobalPropertiesContext);
 
   const addPNode = () => {
+    GlobalVariables.setMode = "selection";
     console.log(elementSelected);
     console.log(GlobalVariables.pointer);
     const otroP = document.createElement("p");
     otroP.textContent = "texto";
     otroP.className = "clase";
     otroP.style.width = "100%";
+    otroP.tabIndex = 0;
+    otroP.addEventListener("focus", handleOnFocus);
+    otroP.addEventListener("blur", handleOnBlur);
     otroP.addEventListener("click", handleClickOnElement);
     GlobalVariables.pointer?.append(otroP);
   };
 
   const addNodeDiv = () => {
+    GlobalVariables.setMode = "selection";
     const otroDiv = document.createElement("div");
     otroDiv.className = "clase";
     otroDiv.style.height = "100px";
     otroDiv.style.width = "100px";
+    otroDiv.tabIndex = 0;
+    otroDiv.addEventListener("focus", handleOnFocus);
+    otroDiv.addEventListener("blur", handleOnBlur);
     otroDiv.addEventListener("click", handleClickOnElement);
     GlobalVariables.pointer?.append(otroDiv);
   };
 
   const increase = () => {
-    let tempW = +(GlobalVariables.pointer as HTMLElement).offsetWidth + 1;
-    let tempH = +(GlobalVariables.pointer as HTMLElement).offsetHeight + 1;
+    let tempW = +(GlobalVariables.pointer as HTMLElement).offsetWidth + 10;
+    let tempH = +(GlobalVariables.pointer as HTMLElement).offsetHeight + 10;
     (GlobalVariables.pointer as HTMLElement).style.maxWidth = `${tempW}px`;
     (GlobalVariables.pointer as HTMLElement).style.width = `${tempW}px`;
     (GlobalVariables.pointer as HTMLElement).style.maxHeight = `${tempH}px`;
@@ -38,8 +49,8 @@ export const PracticeRight = () => {
   };
 
   const decrease = () => {
-    let tempW = +(GlobalVariables.pointer as HTMLElement).offsetWidth - 1;
-    let tempH = +(GlobalVariables.pointer as HTMLElement).offsetHeight - 1;
+    let tempW = +(GlobalVariables.pointer as HTMLElement).offsetWidth - 10;
+    let tempH = +(GlobalVariables.pointer as HTMLElement).offsetHeight - 10;
     (GlobalVariables.pointer as HTMLElement).style.maxWidth = `${tempW}px`;
     (GlobalVariables.pointer as HTMLElement).style.width = `${tempW}px`;
     (GlobalVariables.pointer as HTMLElement).style.maxHeight = `${tempH}px`;
@@ -114,6 +125,7 @@ export const PracticeRight = () => {
       <button className="addButton parentButton">parent</button>
       <button className="moveToParentButton">move to parent</button>
       <button className={moveToActivated ? "moveToButton moveToButtonActivated" : "moveToButton moveToButtonIdle"}>move to</button>
+      <DisplayProperty />
     </section>
   );
 };

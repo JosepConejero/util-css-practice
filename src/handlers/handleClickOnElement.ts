@@ -1,28 +1,34 @@
 import { GlobalVariables } from "../globalVariables/globalVariables";
+import { mainScreen } from "./handlers";
 
 export const handleClickOnElement = (event: Event) => {
   if (GlobalVariables.getMode === "selection") {
-    console.log("en modo selection");
+    //console.log("en modo selection");
     GlobalVariables.pointer = event.target as HTMLElement;
+    GlobalVariables.pointer.focus();
     return;
   }
 
   if (GlobalVariables.getMode === "moving") {
-    console.log("en modo moving");
+    //console.log("en modo moving");
+    if (GlobalVariables.pointer !== mainScreen()) {
+      if (GlobalVariables.pointer !== event.target) {
+        let tempPointer = (GlobalVariables.pointer as HTMLElement).cloneNode(true); //puede que falle por el ID /
+        let parent = event.target;
+        (GlobalVariables.pointer as HTMLElement).remove();
+        GlobalVariables.pointer = parent as HTMLElement;
+        (GlobalVariables.pointer as HTMLElement).append(tempPointer);
+      }
+    }
 
-    let tempPointer = (GlobalVariables.pointer as HTMLElement).cloneNode(true); //puede que falle por el ID /
-    let parent = event.target;
-    (GlobalVariables.pointer as HTMLElement).remove();
-    GlobalVariables.pointer = parent as HTMLElement;
-    (GlobalVariables.pointer as HTMLElement).append(tempPointer);
-
+    GlobalVariables.pointer = mainScreen();
     GlobalVariables.setMode = "selection";
     return;
   }
 
   if (GlobalVariables.getMode === "none") {
-    console.log("en modo none");
-    console.log(event.target);
+    //console.log("en modo none");
+    //console.log(event.target);
     return;
   }
 };
